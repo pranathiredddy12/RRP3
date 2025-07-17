@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hollywood Hits</title>
+    <style>
+        body {
+            background-color: #1a1919;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            background-color: #e83030;
+            color: white;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            padding: 3%;
+            font-size: 40px;
+            width: 100%;
+            margin: 0;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        .search-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        #search-bar {
+            padding: 10px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            border-radius: 5px 0 0 5px;
+            width: 300px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .music-player {
+            width: 80%;
+            text-align: center;
+        }
+        .song-list {
+            margin-top: 20px;
+        }
+        footer {
+            background-color: red;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+        }
+        @media (max-width: 600px) {
+            #search-bar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Hollywood Hits</h1>
+    <main>
+        <div class="search-container">
+            <input type="text" id="search-bar" placeholder="Search..." oninput="searchSong()">
+            <button onclick="search()">Search</button>
+        </div>
+        <section class="music-player hidden" id="music-player">
+            <div class="song-list" id="song-list">
+                <!-- Songs will be loaded here -->
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Play Heart Music</p>
+    </footer>
+    <script>
+        const songs = [
+        { title: "Stereo Hearts - Gym Class Heroes", src: "Stereo Hearts - Gym Class.mp3", img: "https://c.saavncdn.com/458/Stereo-Hearts-English-2011-500x500.jpg" },
+        { title: "Until I Found You - Stephen Sanchez", src: "Until I Found You.mp3", img: "https://i.scdn.co/image/ab67616d00001e022bf0876d42b90a8852ad6244" },
+        { title: "Blinding Lights - The Weeknd", src: "Blinding Lights - The Weeknd.mp3", img: "https://upload.wikimedia.org/wikipedia/en/e/e6/The_Weeknd_-_Blinding_Lights.png" },
+        { title: "I Was Never There - The Weeknd", src: "I Was Never There - The Weeknd.mp3", img: "https://c.saavncdn.com/994/My-Dear-Melancholy-English-2019-20240207052250-150x150.jpg" },
+        { title: "The Hills - The Weeknd", src: "The Hills - The Weeknd.mp3", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRD7CKm6OXlWp3tRUuu1qgbE2UleqYcaqeszg&s" },
+        { title: "Often-feat. KYGO - The Weeknd", src: "Often - The Weeknd (remix).mp3", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWOumNbFqxap37D6wowVPei0c-z7IHOCJKxA&s" },
+        { title: "My Ordinary Life", src: "The Living Tombstone - My Ordinary Life.mp3", img: "https://i1.sndcdn.com/artworks-000371940474-84p9kr-t500x500.jpg" },
+        { title: "Love Story - Indila", src: "Love Story - Indila.mp3", img: "https://i.scdn.co/image/ab67616d0000b2734ae8ff731c49965bf2083405" },
+        { title: "Play Date", src: "Play Date.mp3", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQck0StY0rfdPEflAYqa3cWC1MxAw732UH0nA&s" },
+        { title: "My Universe - ColdPlay X BTS", src: "Coldplay X BTS - My Universe.mp3",img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsMgTZDf_wE-MZteOwUwJQkqqoEt4lwd6O-Q&s" }
+    ];
+        let currentAudio = null;
+        let currentSongIndex = 0;
+        let isPlaying = false;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                document.getElementById('pagelogo').classList.add('hidden');
+                document.getElementById('music-player').classList.remove('hidden');
+                loadSongs();
+            }, 5000);
+        });
+
+        function loadSongs() {
+            const songList = document.getElementById('song-list');
+            songList.innerHTML = '';
+            songs.forEach((song, index) => {
+                const songElement = document.createElement('div');
+                songElement.className = 'song';
+                songElement.innerHTML = `
+                    <img src="${song.img}" alt="${song.title}">
+                    <div class="song-details">
+                        <p>${song.title}</p>
+                        <div class="audio-controls">
+                            <button onclick="prevSong()">⏮</button>
+                            <button onclick="togglePlay(${index})">${isPlaying && currentSongIndex === index ? '⏸' : '▶️'}</button>
+                            <button onclick="nextSong()">⏭</button>
+                        </div>
+                        <input type="range" id="seek-${index}" value="0" max="100" onchange="seek(${index}, this.value)">
+                    </div>
+                `;
+                songList.appendChild(songElement);
+            });
+        }
+
+        function togglePlay(index) {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+
+            if (currentSongIndex !== index) {
+                currentSongIndex = index;
+                currentAudio = new Audio(songs[index].src);
+            }
+
+            if (currentAudio.paused) {
+                currentAudio.play();
+                isPlaying = true;
+            } else {
+                currentAudio.pause();
+                isPlaying = false;
+            }
+
+            currentAudio.ontimeupdate = function() {
+                const seekBar = document.getElementById(`seek-${currentSongIndex}`);
+                seekBar.value = (currentAudio.currentTime / currentAudio.duration) * 100;
+            };
+
+            currentAudio.onended = nextSong;
+            loadSongs();
+        }
+
+        function nextSong() {
+            currentAudio.pause();
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            togglePlay(currentSongIndex);
+        }
+
+        function prevSong() {
+            currentAudio.pause();
+            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            togglePlay(currentSongIndex);
+        }
+
+        function seek(index, value) {
+            if (currentSongIndex === index) {
+                currentAudio.currentTime = (value / 100) * currentAudio.duration;
+            }
+        }
+
+        function searchSong() {
+            const query = document.getElementById('search-bar').value.toLowerCase();
+            const filteredSongs = songs.filter(song => song.title.toLowerCase().includes(query));
+            const songList = document.getElementById('song-list');
+            songList.innerHTML = '';
+            filteredSongs.forEach((song, index) => {
+                const songElement = document.createElement('div');
+                songElement.className = 'song';
+                songElement.innerHTML = `
+                    <img src="${song.img}" alt="${song.title}">
+                    <div class="song-details">
+                        <p>${song.title}</p>
+                        <div class="audio-controls">
+                            <button onclick="prevSong()">⏮</button>
+                            <button onclick="togglePlay(${index})">${isPlaying && currentSongIndex === index ? '⏸' : '▶️'}</button>
+                            <button onclick="nextSong()">⏭</button>
+                        </div>
+                        <input type="range" id="seek-${index}" value="0" max="100" onchange="seek(${index}, this.value)">
+                    </div>
+                `;
+                songList.appendChild(songElement);
+            });
+        }
+
+        function search() {
+            const query = document.getElementById('search-bar').value;
+            alert(`You searched for: ${query}`);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Albums Page</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+	<style>
+	body {
+    	font-family: Arial, sans-serif;
+    	margin: 0;
+    	padding: 0;
+    	display: flex;
+    	justify-content: center;
+    	align-items: center;
+    	height: 100vh;
+    	background-color: black;
+	}
+
+    h1{
+        background-color: #fe3232;
+        color: white;
+        font-size: 35px;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+    }
+
+	.container {
+	    text-align: center;
+	}
+
+	.albums {
+	    display: flex;
+	    flex-wrap: wrap;
+	    justify-content: center;
+	}
+
+	.album {
+	    margin: 10px;
+	    padding: 20px;
+	    background-color: #1d1b1b;
+	    border: 1px solid #ffffff;
+	    border-radius: 5px;
+	    cursor: pointer;
+	    transition: transform 0.2s;
+	    width: 200px;
+	    text-align: center;
+	}
+
+	.album img {
+	    width: 100%;
+	    height: auto;
+	    border-radius: 5px;
+        border: 1px solid #ffffff;
+	}
+
+	.album h2 {
+	    margin: 10px 0 0 0;
+	    font-size: 1.2em;
+        color: wheat;
+	}
+
+	.album:hover {
+	    transform: scale(1.05);
+	}
+
+	@media (max-width: 600px) {
+	    .album {
+	        width: 90%;
+	        margin: 10px auto;
+	    }
+	}
+	</style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="font-size: 40px;">Albums</h1>    
+        <div class="albums">
+            <div class="album" onclick="openAlbum('tolly.html', true)">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8Sb6q02sPbTFpMV5JfbduepKVOPAXQ8HfRQ&s" alt="Album 1">
+                <h2>Tollywood Hits</h2>
+            </div>
+            <div class="album" onclick="openAlbum('bolly.html', true)">
+                <img src="https://c.saavncdn.com/815/Bhediya-Hindi-2023-20230927155213-500x500.jpg" alt="Album 2">
+                <h2>Bollywood Hits</h2>
+            </div>
+            <div class="album" onclick="openAlbum('holly.html', true)">
+                <img src="https://upload.wikimedia.org/wikipedia/en/e/e6/The_Weeknd_-_Blinding_Lights.png" alt="Album 3">
+                <h2>Hollywood Hits</h2>
+            </div>
+            <div class="album" onclick="openAlbum('kpop.html', true)">
+                <img src="https://pbs.twimg.com/media/GIuALIGWYAAtEo-.jpg" alt="Album 3">
+                <h2>K-Pop Hits</h2>
+            </div>
+            <div class="album" onclick="openAlbum('jpop.html', true)">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrd79xU_Hx5IuSG9RcMpMVnqlId-fJkTAtKA&s" alt="Album 3">
+                <h2>J-Pop Hits</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- <script src="scripts.js"></script> -->
+	<script>
+		function openAlbum(url, sameTab) {
+    if (sameTab) {
+        window.location.href = url;
+    } else {
+        window.open(url, '_blank');
+    }
+}
+	</script>
+</body>
+</html>

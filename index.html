@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play Heart Music</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        a{
+            font-size: 20px;
+            margin-right: 85px;
+            margin-left: 85px;
+        }
+    </style>
+</head>
+<body>
+    <div id="pagelogo" class="splash-screen">
+        <h1>Play Heart Music</h1>
+    </div>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="search.html">Search</a></li>
+                <li><a href="albums.html">Albums</a></li>
+                <li><a href="home.html">Home</a></li>
+            </ul>
+        </nav><br>
+        
+        <!-- <div class="user-profile">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOAbx0LaYB72zH24oRWcAaqIYzbJwgdAZVCg&s" alt="User Profile" >
+        </div> -->
+    </header>
+    <main>
+        <section class="hero">
+            <h1>Welcome to Play Heart Music</h1>
+            <p>Enjoy your favorite songs, albums, and artists</p>
+        </section>
+        <!-- <section class="content">
+            <div class="sidebar">
+                <h2>Genres</h2>
+                <ul>
+                    <li><a href="#">Pop</a></li>
+                    <li><a href="#">Rock</a></li>
+                    <li><a href="#">Hip-Hop</a></li>
+                    <li><a href="#">Classical</a></li>
+                </ul>
+            </div>
+            <div class="main-content">
+                <h2>Popular Albums</h2>
+                <div class="albums" id="albums">
+                    <!-- Albums will be loaded here --><!--
+                </div>
+            </div>
+        </section> -->
+        <section class="music-player hidden" id="music-player">
+            <div class="search-bar">
+                <input type="text" id="search" placeholder="Search songs..." oninput="searchSong()">
+            </div>
+            <div class="song-list" id="song-list">
+                <!-- Songs will be loaded here -->
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Play Heart Music</p>
+    </footer>
+    <script src="scripts.js"></script>
+</body>
+</html>

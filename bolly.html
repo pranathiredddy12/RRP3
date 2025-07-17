@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bollywood Hits</title>
+    <style>
+        body {
+            background-color: #1a1919;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            background-color: #e83030;
+            color: white;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            padding: 3%;
+            font-size: 40px;
+            width: 100%;
+            margin: 0;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        .search-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        #search-bar {
+            padding: 10px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            border-radius: 5px 0 0 5px;
+            width: 300px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .music-player {
+            width: 80%;
+            text-align: center;
+        }
+        .song-list {
+            margin-top: 20px;
+        }
+        footer {
+            background-color: red;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+        }
+        @media (max-width: 600px) {
+            #search-bar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Bollywood Hits</h1>
+    <main>
+        <div class="search-container">
+            <input type="text" id="search-bar" placeholder="Search..." oninput="searchSong()">
+            <button onclick="search()">Search</button>
+        </div>
+        <section class="music-player hidden" id="music-player">
+            <div class="song-list" id="song-list">
+                <!-- Songs will be loaded here -->
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Play Heart Music</p>
+    </footer>
+    <script>
+        const songs = [
+        { title: "Hanuman Chalisa - HariHaran", src: "Hanuman Chalisa.mp3", img: "https://thumbs.dreamstime.com/b/hanuman-hindu-deity-21313224.jpg" },
+        { title: "Deva Shree Ganesha", src: "Deva Shree Ganesha - Agneepath.mp3", img: "https://c.saavncdn.com/506/Deva-Shree-Ganesha-Sanskrit-2012-20200518122611-500x500.jpg" },
+        { title: "Namo Namo - Kedarnath", src: "Namo Namo - Kedarnath.mp3", img: "https://cdn.pixabay.com/photo/2023/11/26/10/04/lord-shiva-8413252_640.png" },
+        { title: "Naatu Naatu (Telugu) - RRR", src: "Naatu Naatu - RRR.mp3", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8Sb6q02sPbTFpMV5JfbduepKVOPAXQ8HfRQ&s" },
+        { title: "Sajni Re (L.L) - Arijit Singh", src: "Sajni - Arijit Singh.mp3", img: "https://c.saavncdn.com/252/Laapataa-Ladies-Hindi-2024-20240213151004-500x500.jpg" },
+        { title: "Tera Fitoor - Arijit Singh", src: "Tera Fitoor - Arijit Singh.mp3", img: "https://c.saavncdn.com/007/Tera-Fitoor-From-Genius--Hindi-2018-20191216185510-500x500.jpg" },
+        { title: "Apna Time Aayega - Gully Boy", src: "Apna Time Aayega.mp3", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSm23OvEsySuPjZk-FK3aSnqyGqg6tkuhTJxA&s" },
+        { title: "Apna Bana Le - Arijit Singh", src: "Apna Bana Le - Arijit Singh.mp3", img: "https://c.saavncdn.com/815/Bhediya-Hindi-2023-20230927155213-500x500.jpg" },
+        { title: "Galliyan - Amit Trivedi", src: "Galliyan.mp3", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzXnxHrhkseUN4Weom8j2T4c-ZGpuKFEYxqg&s" },
+        { title: "Gal Karke - Asees Kaur", src: "Gal Karke.mp3", img: "https://c.saavncdn.com/783/Gal-Karke-Punjabi-2022-20240321071230-500x500.jpg" }, 
+        { title: "Jee Kar Daa - Harrdy Sandhu", src: "Jee Kar Daa - Harrdy Sandhu.mp3", img: "https://c.saavncdn.com/677/Jee-Karr-Daa-Punjabi-2020-20200305054355-500x500.jpg" },
+        { title: "Khairiyat - Arijit Singh", src: "Khairiyat (Sad).mp3", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCWCqTSsnUn8HsTanL9DS_uuuLkSTb2631fA&s" },
+        { title: "Tera Hone Laga Hoon - Atif Aslam", src: "Tera Hone Laga Hoon.mp3", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCXQP4FXd1WKZCidaN2ZYV7ES1xoHFy3GZ4A&s" },
+        { title: "Tere Bin Kive", src: "Tere Bin Kive.mp3", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSE1s0Khk0LnZYhlGmDsS9XL6aDhAmfCtPn4A&s" },
+        { title: "Drama - Raftaar", src: "Drama (Raftaar).mp3", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUX_4v0rBuYGDelFhuhfGvHBrpKqHZXUDtrQ&s" },
+        { title: "Move - Raftaar", src: "Move (Raftaar).mp3", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyFEFRIoAMXx7gcGeEXKUWJ_CMKCIyGxaVsg&s" }
+    ];
+
+
+        let currentAudio = null;
+        let currentSongIndex = 0;
+        let isPlaying = false;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                document.getElementById('pagelogo').classList.add('hidden');
+                document.getElementById('music-player').classList.remove('hidden');
+                loadSongs();
+            }, 5000);
+        });
+
+        function loadSongs() {
+            const songList = document.getElementById('song-list');
+            songList.innerHTML = '';
+            songs.forEach((song, index) => {
+                const songElement = document.createElement('div');
+                songElement.className = 'song';
+                songElement.innerHTML = `
+                    <img src="${song.img}" alt="${song.title}">
+                    <div class="song-details">
+                        <p>${song.title}</p>
+                        <div class="audio-controls">
+                            <button onclick="prevSong()">⏮</button>
+                            <button onclick="togglePlay(${index})">${isPlaying && currentSongIndex === index ? '⏸' : '▶️'}</button>
+                            <button onclick="nextSong()">⏭</button>
+                        </div>
+                        <input type="range" id="seek-${index}" value="0" max="100" onchange="seek(${index}, this.value)">
+                    </div>
+                `;
+                songList.appendChild(songElement);
+            });
+        }
+
+        function togglePlay(index) {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+
+            if (currentSongIndex !== index) {
+                currentSongIndex = index;
+                currentAudio = new Audio(songs[index].src);
+            }
+
+            if (currentAudio.paused) {
+                currentAudio.play();
+                isPlaying = true;
+            } else {
+                currentAudio.pause();
+                isPlaying = false;
+            }
+
+            currentAudio.ontimeupdate = function() {
+                const seekBar = document.getElementById(`seek-${currentSongIndex}`);
+                seekBar.value = (currentAudio.currentTime / currentAudio.duration) * 100;
+            };
+
+            currentAudio.onended = nextSong;
+            loadSongs();
+        }
+
+        function nextSong() {
+            currentAudio.pause();
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            togglePlay(currentSongIndex);
+        }
+
+        function prevSong() {
+            currentAudio.pause();
+            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            togglePlay(currentSongIndex);
+        }
+
+        function seek(index, value) {
+            if (currentSongIndex === index) {
+                currentAudio.currentTime = (value / 100) * currentAudio.duration;
+            }
+        }
+
+        function searchSong() {
+            const query = document.getElementById('search-bar').value.toLowerCase();
+            const filteredSongs = songs.filter(song => song.title.toLowerCase().includes(query));
+            const songList = document.getElementById('song-list');
+            songList.innerHTML = '';
+            filteredSongs.forEach((song, index) => {
+                const songElement = document.createElement('div');
+                songElement.className = 'song';
+                songElement.innerHTML = `
+                    <img src="${song.img}" alt="${song.title}">
+                    <div class="song-details">
+                        <p>${song.title}</p>
+                        <div class="audio-controls">
+                            <button onclick="prevSong()">⏮</button>
+                            <button onclick="togglePlay(${index})">${isPlaying && currentSongIndex === index ? '⏸' : '▶️'}</button>
+                            <button onclick="nextSong()">⏭</button>
+                        </div>
+                        <input type="range" id="seek-${index}" value="0" max="100" onchange="seek(${index}, this.value)">
+                    </div>
+                `;
+                songList.appendChild(songElement);
+            });
+        }
+
+        function search() {
+            const query = document.getElementById('search-bar').value;
+            alert(`You searched for: ${query}`);
+        }
+    </script>
+</body>
+</html>

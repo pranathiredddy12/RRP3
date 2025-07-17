@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J-Pop Hits</title>
+    <style>
+        body {
+            background-color: #1a1919;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            background-color: #e83030;
+            color: white;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            padding: 3%;
+            font-size: 40px;
+            width: 100%;
+            margin: 0;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        .search-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        #search-bar {
+            padding: 10px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            border-radius: 5px 0 0 5px;
+            width: 300px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .music-player {
+            width: 80%;
+            text-align: center;
+        }
+        .song-list {
+            margin-top: 20px;
+        }
+        footer {
+            background-color: red;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+        }
+        @media (max-width: 600px) {
+            #search-bar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>J-Pop Hits</h1>
+    <main>
+        <div class="search-container">
+            <input type="text" id="search-bar" placeholder="Search..." oninput="searchSong()">
+            <button onclick="search()">Search</button>
+        </div>
+        <section class="music-player hidden" id="music-player">
+            <div class="song-list" id="song-list">
+                <!-- Songs will be loaded here -->
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Play Heart Music</p>
+    </footer>
+    <script>
+        const songs = [
+        { title: "Blue Bird - Naruto", src: "Blue Bird (Naruto).mp3", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_rEkRWaXceNsqHoiIaAfREqyePKum5KhoEg&s" },
+        { title: "Bonds - Boruto", src: "Bonds - Boruto.mp3", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTO6KnpXHPa8-ijcYU2H9EKbi3yyWIgi_B1qIh85M8Yr7NCx7flVOZ-Bj768tZ_zhyuISU&usqp=CAU" },
+        { title: "Akuma No Ko - AOT", src: "Akuma no Ko.mp3", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTqenX6gyxdAxzm3SXyJcUMl0ghzQ-j51ZCw&s" },
+        { title: "My Ordinary Life", src: "The Living Tombstone - My Ordinary Life.mp3", img: "https://i1.sndcdn.com/artworks-000371940474-84p9kr-t500x500.jpg" },
+        { title: "Shinunoga E-wa - Fuji Kaze (Live)", src: "Shinunoga E-wa (Live).mp3", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrd79xU_Hx5IuSG9RcMpMVnqlId-fJkTAtKA&s" }
+    ];
+
+        let currentAudio = null;
+        let currentSongIndex = 0;
+        let isPlaying = false;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                document.getElementById('pagelogo').classList.add('hidden');
+                document.getElementById('music-player').classList.remove('hidden');
+                loadSongs();
+            }, 5000);
+        });
+
+        function loadSongs() {
+            const songList = document.getElementById('song-list');
+            songList.innerHTML = '';
+            songs.forEach((song, index) => {
+                const songElement = document.createElement('div');
+                songElement.className = 'song';
+                songElement.innerHTML = `
+                    <img src="${song.img}" alt="${song.title}">
+                    <div class="song-details">
+                        <p>${song.title}</p>
+                        <div class="audio-controls">
+                            <button onclick="prevSong()">⏮</button>
+                            <button onclick="togglePlay(${index})">${isPlaying && currentSongIndex === index ? '⏸' : '▶️'}</button>
+                            <button onclick="nextSong()">⏭</button>
+                        </div>
+                        <input type="range" id="seek-${index}" value="0" max="100" onchange="seek(${index}, this.value)">
+                    </div>
+                `;
+                songList.appendChild(songElement);
+            });
+        }
+
+        function togglePlay(index) {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+
+            if (currentSongIndex !== index) {
+                currentSongIndex = index;
+                currentAudio = new Audio(songs[index].src);
+            }
+
+            if (currentAudio.paused) {
+                currentAudio.play();
+                isPlaying = true;
+            } else {
+                currentAudio.pause();
+                isPlaying = false;
+            }
+
+            currentAudio.ontimeupdate = function() {
+                const seekBar = document.getElementById(`seek-${currentSongIndex}`);
+                seekBar.value = (currentAudio.currentTime / currentAudio.duration) * 100;
+            };
+
+            currentAudio.onended = nextSong;
+            loadSongs();
+        }
+
+        function nextSong() {
+            currentAudio.pause();
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            togglePlay(currentSongIndex);
+        }
+
+        function prevSong() {
+            currentAudio.pause();
+            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            togglePlay(currentSongIndex);
+        }
+
+        function seek(index, value) {
+            if (currentSongIndex === index) {
+                currentAudio.currentTime = (value / 100) * currentAudio.duration;
+            }
+        }
+
+        function searchSong() {
+            const query = document.getElementById('search-bar').value.toLowerCase();
+            const filteredSongs = songs.filter(song => song.title.toLowerCase().includes(query));
+            const songList = document.getElementById('song-list');
+            songList.innerHTML = '';
+            filteredSongs.forEach((song, index) => {
+                const songElement = document.createElement('div');
+                songElement.className = 'song';
+                songElement.innerHTML = `
+                    <img src="${song.img}" alt="${song.title}">
+                    <div class="song-details">
+                        <p>${song.title}</p>
+                        <div class="audio-controls">
+                            <button onclick="prevSong()">⏮</button>
+                            <button onclick="togglePlay(${index})">${isPlaying && currentSongIndex === index ? '⏸' : '▶️'}</button>
+                            <button onclick="nextSong()">⏭</button>
+                        </div>
+                        <input type="range" id="seek-${index}" value="0" max="100" onchange="seek(${index}, this.value)">
+                    </div>
+                `;
+                songList.appendChild(songElement);
+            });
+        }
+
+        function search() {
+            const query = document.getElementById('search-bar').value;
+            alert(`You searched for: ${query}`);
+        }
+    </script>
+</body>
+</html>
